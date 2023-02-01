@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.CommentMapper">
+
+	<select id="getCommentsByPostNo" parameterType="int" resultType="CommentListDto">
+		select
+			A.comment_no 			as no,
+			A.comment_user_id		as userId,
+			B.user_name				as userName,
+			A.comment_content		as content,
+			A.comment_created_date	as createdDate
+		from
+			spring_post_comments A, spring_users B
+		where
+			A.comment_user_id = B.user_id
+			and A.comment_post_no = #{value}
+	</select>
+	
+	<select id="getCommentByNo" parameterType="int" resultType="Comment">
+		select
+			comment_no 				as no,
+			comment_user_id			as userId,
+			comment_content			as content,
+			comment_created_date	as createdDate,
+			comment_post_no 		as postNo
+		from
+			spring_post_comments
+		where
+			comment_no = #{value}
+	</select>
+	
+	<insert id="insertComment" parameterType="Comment">
+		insert into spring_post_comments
+		(comment_no, comment_user_id, comment_content, comment_post_no)
+		values
+		(spring_comments_seq.nextval, #{userId}, #{content}, #{postNo})
+	</insert>
+
+	<delete id="deleteComment" parameterType="int">
+		delete from 
+			spring_post_comments
+		where
+			comment_no = #{value}
+	</delete>
+</mapper>
